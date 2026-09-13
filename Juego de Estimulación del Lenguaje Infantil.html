@@ -1,0 +1,1153 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>¡A Hablar Jugando! - Estimulación del Lenguaje</title>
+    <style>
+        /* CSS Variables & Theme Definitions */
+        :root {
+            --primary-bg: #FFFAED;
+            --card-bg: #FFFFFF;
+            --text-color: #2D3748;
+            --accent-yellow: #FFD166;
+            --accent-orange: #FF9F1C;
+            --accent-pink: #FF6B6B;
+            --accent-blue: #4EA8DE;
+            --accent-green: #06D6A0;
+            --accent-purple: #9D4EDD;
+            --shadow-color: rgba(0, 0, 0, 0.12);
+            --font-family: 'Comic Sans MS', 'Chalkboard SE', 'Fredoka', cursive, sans-serif;
+            --border-radius: 28px;
+        }
+
+        /* High Contrast & Reduced Motion Overrides */
+        body.high-contrast {
+            --primary-bg: #FFFFFF;
+            --card-bg: #000000;
+            --text-color: #FFFFFF;
+            --shadow-color: rgba(255, 255, 255, 0.3);
+        }
+
+        body.reduced-motion * {
+            animation: none !important;
+            transition: none !important;
+        }
+
+        /* Base Setup */
+        * {
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-touch-callout: none;
+            margin: 0;
+            padding: 0;
+            touch-action: manipulation;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--primary-bg);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Header Navigation */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 20px;
+            background-color: #FFFFFF;
+            box-shadow: 0 4px 15px var(--shadow-color);
+            z-index: 10;
+        }
+
+        .user-greeting {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: var(--accent-orange);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .icon-btn {
+            background: #F0F4F8;
+            border: 3px solid #CBD5E0;
+            border-radius: 50%;
+            width: 52px;
+            height: 52px;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 0 #CBD5E0;
+            transition: transform 0.1s, background-color 0.2s;
+        }
+
+        .icon-btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 0 0 transparent;
+        }
+
+        /* Main Container */
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 16px;
+            max-width: 900px;
+            margin: 0 auto;
+            width: 100%;
+            position: relative;
+        }
+
+        /* Screen States */
+        .screen {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        .screen.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.96); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        /* Character Buddy Component */
+        .buddy-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+            background: rgba(255, 255, 255, 0.85);
+            padding: 12px 20px;
+            border-radius: 20px;
+            box-shadow: 0 6px 12px var(--shadow-color);
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .buddy-svg {
+            width: 80px;
+            height: 80px;
+            flex-shrink: 0;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        .buddy-bubble {
+            background: #FFFFFF;
+            border: 3px solid var(--accent-orange);
+            border-radius: 18px;
+            padding: 10px 16px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #333;
+            position: relative;
+            flex: 1;
+        }
+
+        .buddy-bubble::before {
+            content: '';
+            position: absolute;
+            left: -12px;
+            top: 50%;
+            transform: translateY(-50%);
+            border-width: 8px 12px 8px 0;
+            border-style: solid;
+            border-color: transparent var(--accent-orange) transparent transparent;
+        }
+
+        /* Dashboard & Grid Buttons */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 16px;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .big-button {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px 10px;
+            border-radius: var(--border-radius);
+            border: 4px solid rgba(0,0,0,0.1);
+            color: #FFFFFF;
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-shadow: 1px 2px 3px rgba(0,0,0,0.3);
+            box-shadow: 0 8px 0 rgba(0,0,0,0.2);
+            cursor: pointer;
+            transition: transform 0.1s, box-shadow 0.1s;
+            text-align: center;
+            min-height: 130px;
+        }
+
+        .big-button:active {
+            transform: translateY(6px);
+            box-shadow: 0 2px 0 rgba(0,0,0,0.2);
+        }
+
+        .big-button .emoji {
+            font-size: 3rem;
+            margin-bottom: 6px;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+        }
+
+        /* Card Activity Displays */
+        .activity-card {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 24px;
+            box-shadow: 0 10px 25px var(--shadow-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 550px;
+            text-align: center;
+            position: relative;
+            margin-top: 10px;
+        }
+
+        .display-emoji {
+            font-size: 7rem;
+            line-height: 1;
+            margin: 20px 0;
+            filter: drop-shadow(0 8px 12px rgba(0,0,0,0.15));
+            animation: pulseSlow 2s infinite ease-in-out;
+        }
+
+        @keyframes pulseSlow {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.06); }
+        }
+
+        .word-display {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: var(--accent-purple);
+            letter-spacing: 2px;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+        }
+
+        .prompt-text {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: var(--accent-orange);
+            margin-bottom: 20px;
+            min-height: 35px;
+        }
+
+        .action-bar {
+            display: flex;
+            gap: 15px;
+            width: 100%;
+            justify-content: center;
+            margin-top: 15px;
+        }
+
+        .action-btn {
+            background: var(--accent-green);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 14px 28px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            box-shadow: 0 6px 0 #049A72;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .action-btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 #049A72;
+        }
+
+        .action-btn.secondary {
+            background: var(--accent-blue);
+            box-shadow: 0 6px 0 #2A72A0;
+        }
+
+        .action-btn.secondary:active {
+            box-shadow: 0 2px 0 #2A72A0;
+        }
+
+        /* Choice Activity Grid */
+        .choice-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            width: 100%;
+            margin: 15px 0;
+        }
+
+        .choice-card {
+            background: #FFFFFF;
+            border: 4px solid #E2E8F0;
+            border-radius: 20px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 6px 0 #CBD5E0;
+            transition: all 0.2s;
+        }
+
+        .choice-card:active {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 #CBD5E0;
+        }
+
+        .choice-card .emoji {
+            font-size: 4.5rem;
+        }
+
+        .choice-card .label {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-top: 8px;
+            color: var(--text-color);
+        }
+
+        /* Canvas Overlay for Celebrations */
+        #fxCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        /* Adult Parent Control Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 200;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #FFFFFF;
+            border-radius: var(--border-radius);
+            padding: 24px;
+            max-width: 500px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #E2E8F0;
+            padding-bottom: 10px;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            color: var(--accent-purple);
+            font-weight: bold;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 6px;
+            font-size: 1rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #CBD5E0;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-family: inherit;
+        }
+
+        .toggle-group {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .stats-badge {
+            background: #EDF2F7;
+            padding: 12px;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        /* Utility Floating Rest Bar */
+        .rest-bar {
+            margin-top: 15px;
+            display: flex;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .rest-btn {
+            background: #EDF2F7;
+            border: 2px solid #CBD5E0;
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-size: 1rem;
+            color: #4A5568;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        /* Progress Dots */
+        .progress-dots {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 10px;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #E2E8F0;
+        }
+
+        .dot.active {
+            background: var(--accent-orange);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="user-greeting">
+            <span>👋</span>
+            <span id="childNameDisplay">¡Hola, Pequeño!</span>
+        </div>
+        <div class="header-actions">
+            <button class="icon-btn" id="soundToggleBtn" title="Sonido/Música">🔊</button>
+            <button class="icon-btn" id="adultModeBtn" title="Modo Adultos">👨‍👩‍👦</button>
+        </div>
+    </header>
+
+    <!-- Canvas for Visual Rewards -->
+    <canvas id="fxCanvas"></canvas>
+
+    <!-- Main Container -->
+    <main>
+
+        <!-- Character Buddy -->
+        <div class="buddy-container" id="buddyContainer">
+            <svg class="buddy-svg" viewBox="0 0 100 100">
+                <!-- Cute Bear SVG Character -->
+                <circle cx="20" cy="25" r="14" fill="#B08968" />
+                <circle cx="20" cy="25" r="8" fill="#EDE0D4" />
+                <circle cx="80" cy="25" r="14" fill="#B08968" />
+                <circle cx="80" cy="25" r="8" fill="#EDE0D4" />
+                <circle cx="50" cy="50" r="38" fill="#795548" />
+                <ellipse cx="50" cy="58" rx="20" ry="14" fill="#EDE0D4" />
+                <ellipse cx="50" cy="52" rx="7" ry="5" fill="#3E2723" />
+                <!-- Eyes -->
+                <circle cx="36" cy="42" r="5" fill="#3E2723" />
+                <circle cx="64" cy="42" r="5" fill="#3E2723" />
+                <circle cx="38" cy="40" r="2" fill="#FFFFFF" />
+                <circle cx="66" cy="40" r="2" fill="#FFFFFF" />
+                <!-- Happy Mouth -->
+                <path d="M 42 62 Q 50 68 58 62" stroke="#3E2723" stroke-width="3" fill="none" stroke-linecap="round" />
+            </svg>
+            <div class="buddy-bubble" id="buddySpeech">¡Hola! Vamos a jugar y a hablar.</div>
+        </div>
+
+        <!-- SCREEN 1: MAIN MENU -->
+        <section id="screenMenu" class="screen active">
+            <div class="dashboard-grid">
+                <button class="big-button" style="background-color: #FF6B6B;" onclick="startActivity('animals')">
+                    <span class="emoji">🐶</span>
+                    <span>ANIMALES</span>
+                </button>
+                <button class="big-button" style="background-color: #4EA8DE;" onclick="startActivity('objects')">
+                    <span class="emoji">🚗</span>
+                    <span>OBJETOS</span>
+                </button>
+                <button class="big-button" style="background-color: #FF9F1C;" onclick="startActivity('sounds')">
+                    <span class="emoji">🎵</span>
+                    <span>SONIDOS</span>
+                </button>
+                <button class="big-button" style="background-color: #06D6A0;" onclick="startActivity('words')">
+                    <span class="emoji">🗣️</span>
+                    <span>PALABRAS</span>
+                </button>
+                <button class="big-button" style="background-color: #9D4EDD;" onclick="startActivity('whatIs')">
+                    <span class="emoji">❓</span>
+                    <span>¿QUÉ ES?</span>
+                </button>
+                <button class="big-button" style="background-color: #FFD166; color: #333;" onclick="startActivity('want')">
+                    <span class="emoji">❤️</span>
+                    <span>QUIERO</span>
+                </button>
+                <button class="big-button" style="background-color: #EF476F;" onclick="startActivity('actions')">
+                    <span class="emoji">🏃</span>
+                    <span>ACCIONES</span>
+                </button>
+                <button class="big-button" style="background-color: #118AB2;" onclick="startActivity('more')">
+                    <span class="emoji">💬</span>
+                    <span>MÁS</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- SCREEN 2: STANDARD REPEAT ACTIVITY -->
+        <section id="screenFlashcard" class="screen">
+            <div class="progress-dots" id="activityProgress">
+                <div class="dot active"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+            </div>
+
+            <div class="activity-card">
+                <div class="display-emoji" id="cardEmoji">🐶</div>
+                <div class="word-display" id="cardWord">PERRO</div>
+                <div class="prompt-text" id="cardPrompt">Escucha...</div>
+
+                <div class="action-bar">
+                    <button class="action-btn" onclick="triggerCardSpeech()">
+                        🔊 Escuchar
+                    </button>
+                    <button class="action-btn secondary" onclick="handleChildAttempt()">
+                        ⭐ ¡Lo dije!
+                    </button>
+                </div>
+            </div>
+
+            <div class="rest-bar">
+                <button class="rest-btn" onclick="showScreen('screenMenu')">🏠 Volver al Menú</button>
+            </div>
+        </section>
+
+        <!-- SCREEN 3: CHOICE & COMPREHENSION ACTIVITY -->
+        <section id="screenChoice" class="screen">
+            <div class="activity-card" style="max-width: 650px;">
+                <div class="prompt-text" id="choiceQuestion">¿Dónde está el perro?</div>
+
+                <div class="choice-grid" id="choiceGrid">
+                    <!-- Dynamic Choices Inserted Here -->
+                </div>
+            </div>
+
+            <div class="rest-bar">
+                <button class="rest-btn" onclick="showScreen('screenMenu')">🏠 Volver al Menú</button>
+            </div>
+        </section>
+
+        <!-- SCREEN 4: REST / SESSION COMPLETE -->
+        <section id="screenRest" class="screen">
+            <div class="activity-card">
+                <div class="display-emoji">👏🎉</div>
+                <div class="word-display">¡MUY BIEN!</div>
+                <div class="prompt-text">Hiciste un trabajo fantástico.</div>
+                <button class="action-btn" onclick="showScreen('screenMenu')">
+                    ⭐ Seguir Jugando
+                </button>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- PARENTAL CONTROL / ADULT MODAL -->
+    <div class="modal" id="adultModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">👨‍👩‍👦 Zona para Adultos</div>
+                <button class="icon-btn" style="width:36px; height:36px; font-size:1rem;" onclick="closeAdultModal()">✕</button>
+            </div>
+
+            <!-- Math Challenge Step -->
+            <div id="mathGate">
+                <p style="margin-bottom: 12px; font-weight: bold;">Para acceder, resuelve esta suma:</p>
+                <div class="form-group">
+                    <label id="mathPrompt">3 + 2 = ?</label>
+                    <input type="number" id="mathAnswer" class="form-control" placeholder="Escribe el resultado">
+                </div>
+                <button class="action-btn" style="width:100%; justify-content:center;" onclick="verifyGate()">Entrar</button>
+            </div>
+
+            <!-- Settings Content (Hidden by default) -->
+            <div id="settingsContent" style="display:none;">
+                <div class="form-group">
+                    <label for="childNameInput">Nombre del niño/a:</label>
+                    <input type="text" id="childNameInput" class="form-control" value="Mateo">
+                </div>
+
+                <div class="form-group">
+                    <label for="difficultySelect">Nivel de Dificultad:</label>
+                    <select id="difficultySelect" class="form-control">
+                        <option value="easy">🟢 Fácil (Sonidos y 1 sílaba)</option>
+                        <option value="medium" selected>🟡 Medio (Palabras 2-3 sílabas)</option>
+                        <option value="hard">🔴 Avanzado (Frases de 2 palabras)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="speechRate">Velocidad de Voz:</label>
+                    <input type="range" id="speechRate" min="0.5" max="1" step="0.05" value="0.8" style="width:100%;">
+                </div>
+
+                <div class="toggle-group">
+                    <span>Efectos Visuales Reducidos:</span>
+                    <input type="checkbox" id="reducedMotionToggle" style="width:20px; height:20px;">
+                </div>
+
+                <div class="toggle-group">
+                    <span>Alto Contraste:</span>
+                    <input type="checkbox" id="highContrastToggle" style="width:20px; height:20px;">
+                </div>
+
+                <hr style="margin: 15px 0;">
+
+                <div class="modal-title" style="font-size:1.2rem; margin-bottom:10px;">📊 Estadísticas de Uso en Casa</div>
+                <div class="stats-badge">
+                    <span>Intentos de interacción:</span>
+                    <strong id="statAttempts">0</strong>
+                </div>
+                <div class="stats-badge">
+                    <span>Actividades completadas:</span>
+                    <strong id="statCompleted">0</strong>
+                </div>
+
+                <div style="margin-top: 20px; display:flex; gap:10px;">
+                    <button class="action-btn" style="background:#06D6A0; flex:1; justify-content:center;" onclick="saveSettings()">Guardar</button>
+                    <button class="action-btn" style="background:#FF6B6B; flex:1; justify-content:center;" onclick="resetStats()">Reiniciar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /* ==========================================================================
+           DATA STRUCTURES & DATABASE (OFFLINE LOCAL REPOSITORY)
+           ========================================================================== */
+        const CONTENT_DATABASE = {
+            animals: [
+                { emoji: '🐶', word: 'PERRO', sound: 'Guau guau', phrase: 'Un perro suave' },
+                { emoji: '🐱', word: 'GATO', sound: 'Miau miau', phrase: 'El gato duerme' },
+                { emoji: '🐮', word: 'VACA', sound: 'Muuu', phrase: 'La vaca da leche' },
+                { emoji: '🐔', word: 'GALLINA', sound: 'Pió pió', phrase: 'La gallina canta' },
+                { emoji: 'PÁJARO', emoji: '🐦', word: 'PÁJARO', sound: 'Pío pío', phrase: 'El pájaro vuela' }
+            ],
+            objects: [
+                { emoji: '🚗', word: 'CARRO', sound: 'Brum brum', phrase: 'El carro va rápido' },
+                { emoji: '⚽', word: 'PELOTA', sound: 'Boing boing', phrase: 'La pelota bota' },
+                { emoji: '🥛', word: 'AGUA', sound: 'Glug glug', phrase: 'Toma agua' },
+                { emoji: '👟', word: 'ZAPATO', sound: 'Tap tap', phrase: 'Ponte el zapato' },
+                { emoji: '🧸', word: 'OSO', sound: 'Mmm', phrase: 'El oso abraza' }
+            ],
+            sounds: [
+                { emoji: '🐶', word: 'GUAU GUAU', sound: 'Guau guau', prompt: '¿Cómo hace el perro?' },
+                { emoji: '🐱', word: 'MIAU', sound: 'Miau', prompt: '¿Cómo hace el gato?' },
+                { emoji: '🐮', word: 'MUUU', sound: 'Muuu', prompt: '¿Cómo hace la vaca?' },
+                { emoji: '🚂', word: 'CHU CHU', sound: 'Chu chu', prompt: '¿Cómo hace el tren?' },
+                { emoji: '🚗', word: 'BRUM BRUM', sound: 'Brum brum', prompt: '¿Cómo hace el carro?' },
+                { emoji: '⏰', word: 'TIC TAC', sound: 'Tic tac', prompt: '¿Cómo hace el reloj?' }
+            ],
+            words: [
+                { emoji: '👩', word: 'MAMÁ', sound: 'Mamá' },
+                { emoji: '👨', word: 'PAPÁ', sound: 'Papá' },
+                { emoji: '🍞', word: 'PAN', sound: 'Pan' },
+                { emoji: '👋', word: 'HOLA', sound: 'Hola' },
+                { emoji: '🤲', word: 'DAME', sound: 'Dame' },
+                { emoji: '🏃', word: 'VEN', sound: 'Ven' }
+            ],
+            actions: [
+                { emoji: '🏃', word: 'CORRER', phrase: 'Niño corre' },
+                { emoji: '👏', word: 'APLAUDIR', phrase: 'Vamos a aplaudir' },
+                { emoji: '😴', word: 'DORMIR', phrase: 'El bebé duerme' },
+                { emoji: '🥤', word: 'BEBER', phrase: 'Beber agua' },
+                { emoji: '🍽️', word: 'COMER', phrase: 'Comer rico' }
+            ],
+            want: [
+                { emoji: '🍎', word: 'MANZANA', phrase: 'Quiero manzana' },
+                { emoji: '🥛', word: 'AGUA', phrase: 'Quiero agua' },
+                { emoji: '🍪', word: 'GALLETA', phrase: 'Quiero galleta' },
+                { emoji: '⚽', word: 'PELOTA', phrase: 'Quiero pelota' }
+            ],
+            more: [
+                { emoji: '🎈', word: 'MÁS GLOBOS', phrase: 'Más globos por favor' },
+                { emoji: '🍎', word: 'MÁS MANZANA', phrase: 'Quiero más manzana' },
+                { emoji: '🥛', word: 'MÁS AGUA', phrase: 'Quiero más agua' },
+                { emoji: '🧸', word: 'MÁS JUGUETE', phrase: 'Dame más juguetes' }
+            ]
+        };
+
+        const BUDDY_PRAISES = [
+            "¡Muy bien!",
+            "¡Excelente!",
+            "¡Qué bien hablas!",
+            "¡Me encanta!",
+            "¡Fantástico!",
+            "¡Genial!"
+        ];
+
+        /* ==========================================================================
+           APPLICATION STATE & SETTINGS
+           ========================================================================== */
+        let state = {
+            childName: 'Mateo',
+            difficulty: 'medium', // easy, medium, hard
+            speechRate: 0.8,
+            soundEnabled: true,
+            reducedMotion: false,
+            highContrast: false,
+            stats: {
+                attempts: 0,
+                completed: 0
+            },
+            currentCategory: null,
+            currentIndex: 0,
+            activeItems: [],
+            gateNum1: 0,
+            gateNum2: 0
+        };
+
+        /* ==========================================================================
+           SPEECH SYNTHESIS ENGINE (OFFLINE API)
+           ========================================================================== */
+        const synth = window.speechSynthesis;
+
+        function hablar(texto, callback = null) {
+            if (!state.soundEnabled) {
+                if (callback) callback();
+                return;
+            }
+
+            // Cancel ongoing speech
+            synth.cancel();
+
+            const utterance = new SpeechSynthesisUtterance(texto);
+            utterance.rate = state.speechRate;
+            utterance.pitch = 1.1; // Slightly higher, friendly pitch for kids
+            utterance.lang = 'es-ES';
+
+            // Try to set a modern Spanish voice if available
+            const voices = synth.getVoices();
+            const esVoice = voices.find(v => v.lang.startsWith('es'));
+            if (esVoice) utterance.voice = esVoice;
+
+            utterance.onend = () => {
+                if (callback) callback();
+            };
+
+            utterance.onerror = () => {
+                if (callback) callback();
+            };
+
+            synth.speak(utterance);
+        }
+
+        function setBuddyText(text) {
+            document.getElementById('buddySpeech').innerText = text;
+        }
+
+        /* ==========================================================================
+           CELEBRATION CANVAS & VISUAL REWARDS SYSTEM
+           ========================================================================== */
+        const canvas = document.getElementById('fxCanvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class Particle {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.size = Math.random() * 12 + 6;
+                this.speedX = (Math.random() - 0.5) * 10;
+                this.speedY = (Math.random() - 0.7) * 10;
+                this.color = `hsl(${Math.random() * 360}, 90%, 60%)`;
+                this.gravity = 0.25;
+                this.alpha = 1;
+                this.decay = Math.random() * 0.02 + 0.01;
+            }
+
+            update() {
+                this.speedY += this.gravity;
+                this.x += this.speedX;
+                this.y += this.speedY;
+                this.alpha -= this.decay;
+            }
+
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = Math.max(0, this.alpha);
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+
+        function triggerConfetti() {
+            if (state.reducedMotion) return;
+            const centerX = window.innerWidth / 2;
+            const centerY = window.innerHeight / 3;
+            for (let i = 0; i < 40; i++) {
+                particles.push(new Particle(centerX, centerY));
+            }
+        }
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = particles.length - 1; i >= 0; i--) {
+                particles[i].update();
+                particles[i].draw();
+                if (particles[i].alpha <= 0) {
+                    particles.splice(i, 1);
+                }
+            }
+            requestAnimationFrame(animateParticles);
+        }
+        animateParticles();
+
+        /* ==========================================================================
+           NAVIGATION & ACTIVITY FLOW LOGIC
+           ========================================================================== */
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+        }
+
+        function startActivity(categoryKey) {
+            state.currentCategory = categoryKey;
+            state.currentIndex = 0;
+            state.activeItems = [...CONTENT_DATABASE[categoryKey]];
+            
+            // Increment total attempts stats
+            state.stats.attempts++;
+            saveStats();
+
+            if (categoryKey === 'whatIs') {
+                setupChoiceActivity();
+                showScreen('screenChoice');
+            } else {
+                setupFlashcardActivity();
+                showScreen('screenFlashcard');
+            }
+        }
+
+        function setupFlashcardActivity() {
+            const item = state.activeItems[state.currentIndex];
+            const cardEmoji = document.getElementById('cardEmoji');
+            const cardWord = document.getElementById('cardWord');
+            const cardPrompt = document.getElementById('cardPrompt');
+
+            cardEmoji.innerText = item.emoji;
+
+            // Adjust display word based on difficulty
+            if (state.difficulty === 'hard' && item.phrase) {
+                cardWord.innerText = item.phrase;
+            } else {
+                cardWord.innerText = item.word;
+            }
+
+            cardPrompt.innerText = "Escucha...";
+            updateProgressDots();
+
+            // Buddy prompt
+            const greeting = `¡Mira! Es ${item.word}`;
+            setBuddyText(greeting);
+            
+            // Speak automatically on load
+            setTimeout(() => {
+                triggerCardSpeech();
+            }, 400);
+        }
+
+        function triggerCardSpeech() {
+            const item = state.activeItems[state.currentIndex];
+            const textToSay = (state.difficulty === 'hard' && item.phrase) ? item.phrase : item.word;
+            
+            document.getElementById('cardPrompt').innerText = "🔊 Escuchando...";
+            hablar(textToSay, () => {
+                // Prompt attempt gently without demanding
+                document.getElementById('cardPrompt').innerText = "🗣️ Ahora tú: Di " + textToSay;
+                setBuddyText(`¿Puedes decir ${textToSay}?`);
+            });
+        }
+
+        function handleChildAttempt() {
+            triggerConfetti();
+            state.stats.completed++;
+            saveStats();
+
+            const praise = BUDDY_PRAISES[Math.floor(Math.random() * BUDDY_PRAISES.length)];
+            document.getElementById('cardPrompt').innerText = "⭐ " + praise;
+            setBuddyText(praise);
+
+            hablar(praise, () => {
+                // Progress to next item after waiting
+                setTimeout(() => {
+                    state.currentIndex++;
+                    if (state.currentIndex < state.activeItems.length) {
+                        setupFlashcardActivity();
+                    } else {
+                        showScreen('screenRest');
+                        hablar("¡Lo hiciste genial! Vamos a descansar.");
+                    }
+                }, 1000);
+            });
+        }
+
+        function updateProgressDots() {
+            const container = document.getElementById('activityProgress');
+            container.innerHTML = '';
+            for (let i = 0; i < state.activeItems.length; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'dot' + (i === state.currentIndex ? ' active' : '');
+                container.appendChild(dot);
+            }
+        }
+
+        /* ==========================================================================
+           CHOICE ACTIVITY ("¿QUÉ ES?") COMPREHENSION LOGIC
+           ========================================================================== */
+        function setupChoiceActivity() {
+            const choiceQuestion = document.getElementById('choiceQuestion');
+            const choiceGrid = document.getElementById('choiceGrid');
+            choiceGrid.innerHTML = '';
+
+            // Pick target item
+            const allItems = [...CONTENT_DATABASE.animals, ...CONTENT_DATABASE.objects];
+            const target = allItems[Math.floor(Math.random() * allItems.length)];
+            
+            // Pick 1 distractor item
+            let distractor = allItems[Math.floor(Math.random() * allItems.length)];
+            while (distractor.word === target.word) {
+                distractor = allItems[Math.floor(Math.random() * allItems.length)];
+            }
+
+            const options = [target, distractor].sort(() => Math.random() - 0.5);
+
+            choiceQuestion.innerText = `¿Dónde está: ${target.word}?`;
+            setBuddyText(`¿Puedes tocar el ${target.word}?`);
+            hablar(`¿Dónde está ${target.word}?`);
+
+            options.forEach(opt => {
+                const card = document.createElement('div');
+                card.className = 'choice-card';
+                card.innerHTML = `
+                    <div class="emoji">${opt.emoji}</div>
+                    <div class="label">${opt.word}</div>
+                `;
+                card.onclick = () => handleChoiceSelection(opt, target);
+                choiceGrid.appendChild(card);
+            });
+        }
+
+        function handleChoiceSelection(selected, target) {
+            if (selected.word === target.word) {
+                triggerConfetti();
+                setBuddyText("¡Sí! ¡Lo encontraste!");
+                hablar(`¡Sí! Es ${target.word}. Ahora di: ${target.word}`, () => {
+                    setTimeout(() => {
+                        startActivity('whatIs'); // Refresh round
+                    }, 2000);
+                });
+            } else {
+                // Gentle non-punitive guidance
+                setBuddyText("¡Buen intento! Mira de nuevo.");
+                hablar(`Ahí está ${selected.word}. ¿Dónde está ${target.word}?`);
+            }
+        }
+
+        /* ==========================================================================
+           PARENTAL CONTROLS & LOCAL STORAGE PERSISTENCE
+           ========================================================================== */
+        const adultModal = document.getElementById('adultModal');
+
+        document.getElementById('adultModeBtn').onclick = () => {
+            // Open math gate
+            state.gateNum1 = Math.floor(Math.random() * 5) + 1;
+            state.gateNum2 = Math.floor(Math.random() * 5) + 1;
+            document.getElementById('mathPrompt').innerText = `${state.gateNum1} + ${state.gateNum2} = ?`;
+            document.getElementById('mathAnswer').value = '';
+            document.getElementById('mathGate').style.display = 'block';
+            document.getElementById('settingsContent').style.display = 'none';
+            adultModal.classList.add('active');
+        };
+
+        function closeAdultModal() {
+            adultModal.classList.remove('active');
+        }
+
+        function verifyGate() {
+            const ans = parseInt(document.getElementById('mathAnswer').value, 10);
+            if (ans === (state.gateNum1 + state.gateNum2)) {
+                document.getElementById('mathGate').style.display = 'none';
+                document.getElementById('settingsContent').style.display = 'block';
+                // Load form values
+                document.getElementById('childNameInput').value = state.childName;
+                document.getElementById('difficultySelect').value = state.difficulty;
+                document.getElementById('speechRate').value = state.speechRate;
+                document.getElementById('reducedMotionToggle').checked = state.reducedMotion;
+                document.getElementById('highContrastToggle').checked = state.highContrast;
+                document.getElementById('statAttempts').innerText = state.stats.attempts;
+                document.getElementById('statCompleted').innerText = state.stats.completed;
+            } else {
+                alert("Respuesta incorrecta.");
+            }
+        }
+
+        function saveSettings() {
+            state.childName = document.getElementById('childNameInput').value || 'Pequeño';
+            state.difficulty = document.getElementById('difficultySelect').value;
+            state.speechRate = parseFloat(document.getElementById('speechRate').value);
+            state.reducedMotion = document.getElementById('reducedMotionToggle').checked;
+            state.highContrast = document.getElementById('highContrastToggle').checked;
+
+            // Apply accessibility toggles immediately
+            document.body.classList.toggle('reduced-motion', state.reducedMotion);
+            document.body.classList.toggle('high-contrast', state.highContrast);
+
+            document.getElementById('childNameDisplay').innerText = `¡Hola, ${state.childName}!`;
+
+            saveToLocalStorage();
+            closeAdultModal();
+        }
+
+        function resetStats() {
+            state.stats.attempts = 0;
+            state.stats.completed = 0;
+            saveStats();
+            document.getElementById('statAttempts').innerText = 0;
+            document.getElementById('statCompleted').innerText = 0;
+        }
+
+        function saveStats() {
+            saveToLocalStorage();
+        }
+
+        function saveToLocalStorage() {
+            try {
+                localStorage.setItem('ahablar_app_data', JSON.stringify({
+                    childName: state.childName,
+                    difficulty: state.difficulty,
+                    speechRate: state.speechRate,
+                    reducedMotion: state.reducedMotion,
+                    highContrast: state.highContrast,
+                    stats: state.stats
+                }));
+            } catch (e) {
+                console.warn("Storage restricted or unavailable.");
+            }
+        }
+
+        function loadFromLocalStorage() {
+            try {
+                const raw = localStorage.getItem('ahablar_app_data');
+                if (raw) {
+                    const parsed = JSON.parse(raw);
+                    state.childName = parsed.childName || 'Mateo';
+                    state.difficulty = parsed.difficulty || 'medium';
+                    state.speechRate = parsed.speechRate || 0.8;
+                    state.reducedMotion = !!parsed.reducedMotion;
+                    state.highContrast = !!parsed.highContrast;
+                    state.stats = parsed.stats || { attempts: 0, completed: 0 };
+
+                    document.getElementById('childNameDisplay').innerText = `¡Hola, ${state.childName}!`;
+                    document.body.classList.toggle('reduced-motion', state.reducedMotion);
+                    document.body.classList.toggle('high-contrast', state.highContrast);
+                }
+            } catch (e) {
+                console.warn("Could not load from localStorage.");
+            }
+        }
+
+        // Sound Toggle Handler
+        document.getElementById('soundToggleBtn').onclick = () => {
+            state.soundEnabled = !state.soundEnabled;
+            document.getElementById('soundToggleBtn').innerText = state.soundEnabled ? '🔊' : '🔇';
+        };
+
+        /* ==========================================================================
+           INITIALIZATION ENTRY POINT
+           ========================================================================== */
+        window.onload = () => {
+            loadFromLocalStorage();
+            
+            // Warmup speech engine voices
+            if (speechSynthesis.onvoiceschanged !== undefined) {
+                speechSynthesis.onvoiceschanged = () => synth.getVoices();
+            }
+
+            // Initial greeting
+            setTimeout(() => {
+                hablar(`¡Hola ${state.childName}! Vamos a jugar.`);
+            }, 600);
+        };
+    </script>
+</body>
+</html>
